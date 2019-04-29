@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin # TODO read about mixins
+from django.urls import reverse_lazy
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 
@@ -12,18 +15,18 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk = pk)
     return render(request, 'blog/post_detail.html', {'post': post})
 
-@login_required
-def post_new(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit = False)
-            post.author = request.user
-            post.save()
-            return redirect('post_detail', pk = post.pk)
-    else:
-        form = PostForm()
-    return render(request, 'blog/post_new.html', {'form': form})
+# @login_required
+# def post_new(request):
+#     if request.method == 'POST':
+#         form = PostForm(request.POST)
+#         if form.is_valid():
+#             post = form.save(commit = False)
+#             post.author = request.user
+#             post.save()
+#             return redirect('post_detail', pk = post.pk)
+#     else:
+#         form = PostForm()
+#     return render(request, 'blog/post_new.html', {'form': form})
 
 @login_required
 def post_edit(request, pk):
@@ -80,3 +83,11 @@ def comment_approve(request, pk):
     comment = get_object_or_404(Comment, pk = pk)
     comment.approve()
     return redirect('post_detail', pk = comment.post.pk)
+
+class CreatePostView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'text', 'thumbnail',]
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
