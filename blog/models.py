@@ -10,7 +10,11 @@ class Post(models.Model):
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank = True, null = True)
-    thumbnail = models.ImageField(upload_to = 'images/', null = True)
+    thumbnail = models.ImageField(upload_to = 'images/', null = False)
+
+    @staticmethod
+    def get_latest_posts(n):
+        return Post.objects.filter(published_date__isnull = False)[::-1][:n]
 
     def publish(self):
         self.published_date = timezone.now()
@@ -19,7 +23,7 @@ class Post(models.Model):
     def approved_comments(self):
         return self.comments.filter(approved_comment = True)
 
-    def get_absolute_url(self):
+    def get_absolute_url():
         return reverse('post_detail', kwargs={'pk': self.pk})
 
     def __str__(self):

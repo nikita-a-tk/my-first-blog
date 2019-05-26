@@ -1,34 +1,138 @@
 {% load static %}
 <html>
     <head>
-        <title>Nikita's blog</title>
-        
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="{% static "css/blog.css" %}">
-
-
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Nikita's Blog</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="all,follow">
+        <!-- Bootstrap CSS-->
+        <link rel="stylesheet" href="{% static "vendor/bootstrap/css/bootstrap.min.css" %}">
+        <!-- Font Awesome CSS-->
+        <link rel="stylesheet" href="{% static "vendor/font-awesome/css/font-awesome.min.css" %}">
+        <!-- Custom icon font-->
+        <link rel="stylesheet" href="{% static "css/fontastic.css" %}">
+        <!-- Google fonts - Open Sans-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <!-- Fancybox-->
+        <link rel="stylesheet" href="{% static "vendor/@fancyapps/fancybox/jquery.fancybox.min.css" %}">
+        <!-- theme stylesheet-->
+        <link rel="stylesheet" href="{% static "css/style.default.css" %}" id="theme-stylesheet">
+        <!-- Custom stylesheet - for your changes-->
+        <link rel="stylesheet" href="{% static "css/custom.css" %}">
+        <!-- Favicon-->
+        <link rel="shortcut icon" href="{% static "favicon.png" %}">
+        <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
     </head>
     <body>
-        <div class="page-header">
-            {% if user.is_authenticated %}
-                <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-                <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
-                <p class="top-menu">Hello {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
-            {% else %}
-                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
-            {% endif %}
-            <h1><a href="/">Nikita's Blog</a></h1>
-        </div>
-        <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
-                    {% block content %}
-                    {% endblock %}
+        <header class="header">
+            <!-- Main Navbar-->
+            <nav class="navbar navbar-expand-lg">
+                <div class="search-area">
+                    <div class="search-area-inner d-flex align-items-center justify-content-center">
+                        <div class="close-btn"><i class="icon-close"></i></div>
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-md-8">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <input type="search" name="search" id="search" placeholder="What are you looking for?">
+                                        <button type="submit" class="submit"><i class="icon-search-1"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <!-- Navbar Brand -->
+                    <div class="navbar-header d-flex align-items-center justify-content-between">
+                        <!-- Navbar Brand --><a href="{% url 'index' %}" class="navbar-brand">Nikita's Blog</a>
+                        <!-- Toggle Button-->
+                        <button type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span></span><span></span><span></span></button>
+                    </div>
+                    <!-- Navbar Menu -->
+                    <div id="navbarcollapse" class="collapse navbar-collapse">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a href="{% url 'index' %}" class="nav-link ">Home</a></li>
+                            <li class="nav-item"><a href="{% url 'post_list' %}" class="nav-link ">Posts</a></li>
+                            <li class="nav-item "><a href=".contacts" class="nav-link continue link-scroll">Contacts</a></li>
+                            {% if user.is_authenticated %}
+                                <li class="nav-item nav-link">|</li>
+                                <li class="nav-item "><a href="{% url 'post_new' %}" class="nav-link ">New Post</a></li>
+                                <li class="nav-item "><a href="{% url 'post_draft_list' %}" class="nav-link ">Drafts</a></li>
+                                <li class="nav-item nav-link">|</li>
+                                <li class="nav-item nav-link">{{ user.username }} <a href="{% url 'logout' %}" class=" ">(<small>Log out</small>)</a></li>
+                            {% else %}
+                                <li class="nav-item nav-link">|</li>
+                                <li class="nav-item "><a href="{% url 'login' %}" class="nav-link ">Login</a></li>
+                            {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    
+        <!-- Page Body-->
+        {% block content %}
+        {% endblock %}
+
+        <!-- Page Footer-->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="logo">
+                            <h6 class="text-white">Nikita Tkachev</h6>
+                        </div>
+                        <div class="contact-details">
+                            <p>Saint Petersburg, Russia</p>
+                            <p>Email: <a href="mailto:nikita-a-tk@yandex.ru">nikita-a-tk@yandex.ru</a></p>
+                            <ul class="social-menu contacts">
+                                <li class="list-inline-item"><a href="https://github.com/nikita-a-tk" target="_blank"><i class="fa fa-github"></i></a></li>
+                                <li class="list-inline-item"><a href="https://www.instagram.com/nikita_a_tk/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                                <li class="list-inline-item"><a href="https://www.linkedin.com/in/nikita-tkachev-108141183/" target="_blank"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+                                <li class="list-inline-item"><a href="https://vk.com/nikitaatk" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i></a></li>
+                                <li class="list-inline-item"><a href="https://spb.hh.ru/resume/95ce8aa2ff06fc8a1e0039ed1f6d5967445858" target="_blank"><i class="fa fa-address-card" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="latest-posts">
+                            {% for post in latest_posts %}
+                            <div class="post d-flex align-items-center">
+                                <div class="image"><img src="{{ post.thumbnail.url }}" alt="..." class="img-fluid"></div>
+                                <a href="{% url 'post_detail' pk=post.pk %}">
+                                    <div class="title"><strong>{{ post.title }}</strong><span class="date last-meta">{{ post.published_date }}</span></div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="copyrights">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <p>Template By <a href="https://bootstrapious.com/p/bootstrap-carousel" class="text-white">Bootstrapious</a>
+                                <!-- Please do not remove the backlink to Bootstrap Temple unless you purchase an attribution-free license @ Bootstrap Temple or support us at http://bootstrapious.com/donate. It is part of the license conditions. Thanks for understanding :)                         -->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- JavaScript files-->
+        <script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+        <script src="{% static "vendor/popper.js/umd/popper.min.js" %}"></script>
+        <script src="{% static "vendor/bootstrap/js/bootstrap.min.js" %}"></script>
+        <script src="{% static "vendor/jquery.cookie/jquery.cookie.js" %}"></script>
+        <script src="{% static "vendor/@fancyapps/fancybox/jquery.fancybox.min.js" %}"></script>
+        <script src="{% static "js/front.js" %}"></script>
     </body>
 </html>

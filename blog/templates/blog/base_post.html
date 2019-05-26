@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <!-- Latest Posts -->
+            {% block post %}
+            {% endblock post %}
+
+            <aside class="col-lg-4">
+                <!-- Widget [Latest Posts Widget] -->
+                <div class="widget latest-posts">
+                    <header>
+                        <h3 class="h6">Latest Posts</h3>
+                    </header>
+                    <div class="blog-posts">
+                        {% for post in latest_posts %}
+                            <div class="post d-flex align-items-center">
+                                <div class="image"><img src="{{ post.thumbnail.url }}" alt="..." class="img-fluid"></div>
+                                <a href="{% url 'post_detail' pk=post.pk %}">
+                                    <div class="title"><strong>{{ post.title }}</strong><span class="date last-meta">{{ post.published_date }}</span></div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>    
+{% endblock content %}

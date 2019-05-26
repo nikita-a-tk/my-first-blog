@@ -1,11 +1,35 @@
-{% extends "blog/base.html" %}
+{% extends "blog/base_post.html" %}
 
-{% block content %}
-    {% for post in posts %}
+{% block post %}
+    {% comment %} {% for post in posts %}
         <div class="post">
             <p class="date">created: {{ post.created_date|date:'d-m-Y' }}</p>
-            <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
             <p>{{ post.text|truncatechars:200 }}</p>
         </div>
-    {% endfor %}    
-{% endblock %}
+    {% endfor %}  {% endcomment %}
+    <!-- Posts-->
+    <main class="posts-listing col-lg-8"> 
+        <div class="container">
+            <div class="row">
+                {% for post in posts|slice:"::-1" %}
+                    <div class="post col-xl-6">
+                        <div class="post-thumbnail"><a href="{% url 'post_detail' pk=post.pk %}"><img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="img-fluid"></a></div>
+                        <div class="post-details">
+                            <a href="{% url 'post_detail' pk=post.pk %}">
+                                <h3 class="h4">{{ post.title }}</h3></a>
+                            <p class="text-muted">{{ post.text|linebreaksbr|truncatechars:100 }}</p>
+                            <a href="{% url "post_publish" pk=post.pk %}"><div class="image"><i class="fa fa-check-square" aria-hidden="true" title="Publish post"></i></div></a>
+                            <a href="{% url "post_edit" pk=post.pk %}"><div class="image"><i class="fa fa-pencil-square" aria-hidden="true"></i></div></a>
+                            <a href="{% url "post_remove" pk=post.pk %}"><div class="image"><i class="fa fa-window-close" aria-hidden="true" title="Delete post"></i></div></a>
+                            <footer class="post-footer d-flex align-items-center">
+                                <div class="date"><i class="icon-clock"></i>{{ post.created_date }}</div>
+                                <div class="comments meta-last"><i class="icon-comment"></i>{{ post.approved_comments.count }}</div>
+                            </footer>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>    
+        </div>
+    </main>
+{% endblock post %}
